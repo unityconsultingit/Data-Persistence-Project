@@ -10,7 +10,7 @@ public class MainManager : MonoBehaviour
     public int LineCount = 6;
     public Rigidbody Ball;
 
-    public int HighScore;
+    public Text HighScoreText;
 
     public Text ScoreText;
     public GameObject GameOverText;
@@ -27,10 +27,15 @@ public class MainManager : MonoBehaviour
 
         // public GameObject HighScoreText;
 
+
+        // string HighScore = GetComponent<HighScoreText>().text;
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
 
         // HighScore = SaveClass.LoadScore;
+
+        //.text=SaveClass.Instance.HighScore;
 
         AddPoint(0);
 
@@ -45,6 +50,10 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
+
+        HighScoreText.text = "Best Score : " + SaveClass.Instance.HighScorePlayerName + " :" + SaveClass.Instance.HighScore.ToString();
+
     }
 
     private void Update()
@@ -52,7 +61,7 @@ public class MainManager : MonoBehaviour
 
 
 
-     
+
 
         if (!m_Started)
         {
@@ -82,6 +91,20 @@ public class MainManager : MonoBehaviour
         string playerName = SaveClass.Instance.PlayerName;
         m_Points += point;
         ScoreText.text = $"Score of {playerName}: {m_Points}";
+
+
+        if (m_Points > SaveClass.Instance.HighScore)
+        {
+
+            SaveClass.Instance.HighScore = m_Points;
+            Debug.Log("New highScore:" + SaveClass.Instance.HighScore);
+            SaveClass.Instance.HighScorePlayerName = playerName;
+            HighScoreText.text = "Best Score : " + SaveClass.Instance.HighScorePlayerName + " :" + SaveClass.Instance.HighScore.ToString();
+
+            //Best Score : Name : 0
+
+            SaveClass.Instance.SaveHighScore();
+        }
     }
 
     public void GameOver()

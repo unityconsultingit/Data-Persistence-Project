@@ -12,7 +12,12 @@ public class SaveClass : MonoBehaviour
 
     public Color TeamColor;
 
+    public int HighScore=0;
+
     public string PlayerName; // new variable declared
+    public string HighScorePlayerName; // new variable declared
+
+
 
     private void Awake()
     {
@@ -24,26 +29,30 @@ public class SaveClass : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        LoadColor();
+        LoadHighScore();
     }
 
     [System.Serializable]
     class SaveData
     {
         public Color TeamColor;
+        public int HighScore;
+        public string HighScorePlayerName;
     }
 
-     public void SaveColor()
+     public void SaveHighScore()
     {
         SaveData data = new SaveData();
         data.TeamColor = TeamColor;
+        data.HighScore = HighScore;
+        data.HighScorePlayerName = HighScorePlayerName;
 
         string json = JsonUtility.ToJson(data);
 
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
     }
 
-    public void LoadColor()
+    public void LoadHighScore()
     {
         string path = Application.persistentDataPath + "/savefile.json";
         if (File.Exists(path))
@@ -52,6 +61,8 @@ public class SaveClass : MonoBehaviour
             SaveData data = JsonUtility.FromJson<SaveData>(json);
 
             TeamColor = data.TeamColor;
+            HighScore = data.HighScore;
+            HighScorePlayerName = data.HighScorePlayerName;
         }
     }
 
